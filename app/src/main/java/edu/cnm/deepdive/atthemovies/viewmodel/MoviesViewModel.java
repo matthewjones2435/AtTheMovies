@@ -12,7 +12,8 @@ public class MoviesViewModel extends ViewModel {
   public List<Movie> getMovies() {
     return movies;
   }
-  public void addMovie(Movie movie) {
+
+  public void addMovie(Movie movie){
     movies.add(movie);
   }
 }
