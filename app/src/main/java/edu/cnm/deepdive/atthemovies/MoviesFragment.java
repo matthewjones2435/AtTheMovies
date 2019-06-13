@@ -40,11 +40,8 @@ public class MoviesFragment extends Fragment {
       Bundle savedInstanceState) {
 
     final View view = inflater.inflate(R.layout.fragment_movies, container, false);
-
     final ListView moviesListView = view.findViewById(R.id.movies_list);
-
     final MoviesViewModel viewModel = ViewModelProviders.of(getActivity()).get(MoviesViewModel.class);
-
 
 
     viewModel.getMoviesLiveData(context).observe(this, new Observer<Map<Long, Movie>>() {
@@ -84,10 +81,7 @@ public class MoviesFragment extends Fragment {
         newMovieNameEditText.setText("");
       }
     });
-
     // Inflate the layout for this fragment
-
     return view;
   }
-
 }

@@ -19,11 +19,15 @@ public class Movie implements Serializable {
   }
 
   private Genre genre;
-
   public Movie() {
     id = ++last_id;
   }
-
+  public Movie(Long id) {
+    if (last_id < id) {
+      last_id = id;
+    }
+    this.id = id;
+  }
   public Long getId() {
     return id;
   }
@@ -31,31 +35,24 @@ public class Movie implements Serializable {
   public String getTitle() {
     return title;
   }
-
   public void setTitle(String title) {
     this.title = title;
   }
-
   public List<Actor> getActors() {
     return actors;
   }
-
   public void setActors(List<Actor> actors) {
     this.actors = actors;
   }
-
   public String getScreenwriter() {
     return screenwriter;
   }
-
   public void setScreenwriter(String screenwriter) {
     this.screenwriter = screenwriter;
   }
-
   public Genre getGenre() {
     return genre;
   }
-
   public void setGenre(Genre genre) {
     this.genre = genre;
   }
@@ -63,7 +60,7 @@ public class Movie implements Serializable {
   @NonNull
   @Override
   public String toString() {
-    return title + ": " + genre + " " + screenwriter;
+    return title + ": " + genre + ": " + screenwriter;
   }
 }
 
