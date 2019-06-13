@@ -1,33 +1,32 @@
 package edu.cnm.deepdive.atthemovies.model;
 
 import androidx.annotation.NonNull;
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
+import androidx.room.TypeConverter;
+import androidx.room.TypeConverters;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+
+@Entity
 public class Movie implements Serializable {
 
   private static final long serialVersionUID = 1L;
-  public static Long last_id = 0L;
+  @PrimaryKey(autoGenerate = true)
   private Long id;
   private String title;
   private List<Actor> actors = new ArrayList<>();
   private String screenwriter;
 
   public enum Genre {
-     HORROR, ACTION, ROMCOM, DOCUMENTARY, ANIME, SCIFI, FANTASY
+    HORROR, ACTION, ROMCOM, DOCUMENTARY, ANIME, SCIFI, FANTASY
   }
 
+  @TypeConverters(GenreConverter.class)
   private Genre genre;
-  public Movie() {
-    id = ++last_id;
-  }
-  public Movie(Long id) {
-    if (last_id < id) {
-      last_id = id;
-    }
-    this.id = id;
-  }
+
   public Long getId() {
     return id;
   }
@@ -35,24 +34,31 @@ public class Movie implements Serializable {
   public String getTitle() {
     return title;
   }
+
   public void setTitle(String title) {
     this.title = title;
   }
+
   public List<Actor> getActors() {
     return actors;
   }
+
   public void setActors(List<Actor> actors) {
     this.actors = actors;
   }
+
   public String getScreenwriter() {
     return screenwriter;
   }
+
   public void setScreenwriter(String screenwriter) {
     this.screenwriter = screenwriter;
   }
+
   public Genre getGenre() {
     return genre;
   }
+
   public void setGenre(Genre genre) {
     this.genre = genre;
   }
@@ -61,6 +67,22 @@ public class Movie implements Serializable {
   @Override
   public String toString() {
     return title + ": " + genre + ": " + screenwriter;
+  }
+
+  private static class GenreConverter {
+
+    @TypeConverter
+    public static Genre stringToGenre(String value) {
+      return Genre.valueOf(value);
+
+    }
+
+    @TypeConverter
+    public static String genreToString(Genre genre) {
+      return genre.name();
+    }
+
+
   }
 }
 
