@@ -17,8 +17,11 @@ public class Movie implements Serializable {
   @PrimaryKey(autoGenerate = true)
   private Long id;
   private String title;
-  private List<Actor> actors = new ArrayList<>();
   private String screenwriter;
+
+  public void setId(Long id) {
+    this.id = id;
+  }
 
   public enum Genre {
     HORROR, ACTION, ROMCOM, DOCUMENTARY, ANIME, SCIFI, FANTASY
@@ -37,14 +40,6 @@ public class Movie implements Serializable {
 
   public void setTitle(String title) {
     this.title = title;
-  }
-
-  public List<Actor> getActors() {
-    return actors;
-  }
-
-  public void setActors(List<Actor> actors) {
-    this.actors = actors;
   }
 
   public String getScreenwriter() {
@@ -69,7 +64,7 @@ public class Movie implements Serializable {
     return title + ": " + genre + ": " + screenwriter;
   }
 
-  private static class GenreConverter {
+  public static class GenreConverter {
 
     @TypeConverter
     public static Genre stringToGenre(String value) {
@@ -81,7 +76,6 @@ public class Movie implements Serializable {
     public static String genreToString(Genre genre) {
       return genre.name();
     }
-
 
   }
 }
