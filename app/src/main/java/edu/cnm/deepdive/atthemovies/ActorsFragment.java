@@ -2,20 +2,21 @@ package edu.cnm.deepdive.atthemovies;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Spinner;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
-import edu.cnm.deepdive.atthemovies.MoviesFragmentDirections.ActionMoviesFragmentToActorsFragment2;
 import edu.cnm.deepdive.atthemovies.model.Actor;
+import edu.cnm.deepdive.atthemovies.viewmodel.ActorsViewModel;
 import edu.cnm.deepdive.atthemovies.viewmodel.MoviesViewModel;
 import java.util.List;
 
@@ -41,11 +42,10 @@ public class ActorsFragment extends Fragment {
       Bundle savedInstanceState) {
     // Inflate the layout for this fragment
     final View view = inflater.inflate(R.layout.fragment_actors, container, false);
-
-    final MoviesViewModel viewModel = ViewModelProviders.of(getActivity()).get(MoviesViewModel.class);
+    final ActorsViewModel viewModel = ViewModelProviders.of(this).get(ActorsViewModel.class);
 
     final Long movieId = ActorsFragmentArgs.fromBundle(getArguments()).getMovieId();
-    viewModel.getActorsLiveData().observe(this, new Observer<List<Actor>>() {
+    viewModel.getActors(movieId).observe(this, new Observer<List<Actor>>() {
       @Override
       public void onChanged(List<Actor> actors) {
         final ArrayAdapter<Actor> adapter = new ArrayAdapter<>(context,
@@ -62,11 +62,29 @@ public class ActorsFragment extends Fragment {
       public void onClick(View v) {
         Actor newActor = new Actor ();
         newActor.setName(newActorName.getText().toString());
-        viewModel.addActor(newActor);
+        viewModel.addNewActor(movieId, newActor);
         newActorName.setText("");
       }
     });
 
+    final MoviesViewModel moviesViewModel = ViewModelProviders.of(getActivity()).get(MoviesViewModel.class);
+    moviesViewModel.getActorsLiveData().observe(this, new Observer<List<Actor>>() {
+      @Override
+      public void onChanged(final List<Actor> actors) {
+        final Spinner actorsSpinner = view.findViewById(R.id.actor_spinner);
+        ArrayAdapter spinnerAdapter = new ArrayAdapter<>(context, android.R.layout.simple_spinner_item,
+            actors);
+        actorsSpinner.setAdapter(spinnerAdapter);
+        Button addActortoMovieButton = view.findViewById(R.id.add_actor_to_movie_button);
+        addActortoMovieButton.setOnClickListener((new OnClickListener() {
+          @Override
+          public void onClick(View v) {
+            moviesViewModel.addActorToMovie(movieId, ((Actor) actorsSpinner.getSelectedItem()).getId());
+
+          }
+        }));
+      }
+    });
     return view;
   }
 
